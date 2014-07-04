@@ -43,7 +43,7 @@
 <li>which commands in an auto-complete menu might be triggered next.</li>
 <li>which fonts in a font-chooser widget might be selected next.</li>
 <li>basically every part in a user interface where reuse or revisitation of things is involved...</li>
-</ul><p>To improve on other common methods such as recency-based and frequency-based predictions, <em>AccessRank</em> adds Markov weights, time weighting, and other parameters for calculating a final score for each item, while the algorithm tries to maximize both prediction accurracy and list stability. Prediction accurracy is important since top items are easier and faster to access than items in bottom sections; list stability is important since automatic reordering of items can impede usability when users try to reselect an item based on an already learned location. You can configure the algorithm depending on whether you prefer more prediction accuracy or more list stability.</p>
+</ul><p>To improve on other common methods such as recency-based and frequency-based predictions, <em>AccessRank</em> adds Markov weights, time weighting, and other parameters for calculating a final score for each item, while the algorithm tries to maximize both prediction accuracy and list stability. Prediction accuracy is important since top items are easier and faster to access than items in bottom sections; list stability is important since automatic reordering of items can impede usability when users try to reselect an item based on an already learned location. You can configure the algorithm depending on whether you prefer more prediction accuracy or more list stability.</p>
 
 <p>Once <em>AccessRank</em> has calculated predictions, you can use the resulting list to enhance your user interface in various ways. For example, you could display the most likely next items in an additional list as suggestions, or you could visually highlight relevant objects to give users cues where they might want to go next.</p>
 
@@ -71,7 +71,7 @@
 <h4>
 <a name="initializing" class="anchor" href="#initializing"><span class="octicon octicon-link"></span></a>Initializing</h4>
 
-<p><em>AccessRank</em> is initialized with an enum value for the list stability that should be used for predictions. The default list stability is <code>.ListStability.Medium</code>. Other possible values are <code>.ListStability.Low</code> and <code>.ListStability.High</code>. <em>Low</em> stability means that prediction accurracy should be maximized while items are allowed to be reordered more than with other values. <em>High</em> stability means that the ordering of items should remain as stable as possible so that users can better learn item locations over time. The appropriate value to use here depends on your application domain. <em>Medium</em> stability is the default value and should be used if you are insecure which one to choose.<br>
+<p><em>AccessRank</em> is initialized with an enum value for the list stability that should be used for predictions. The default list stability is <code>.ListStability.Medium</code>. Other possible values are <code>.ListStability.Low</code> and <code>.ListStability.High</code>. <em>Low</em> stability means that prediction accuracy should be maximized while items are allowed to be reordered more than with other values. <em>High</em> stability means that the ordering of items should remain as stable as possible so that users can better learn item locations over time. The appropriate value to use here depends on your application domain. <em>Medium</em> stability is the default value and should be used if you are insecure which one to choose.<br>
 (Also see the three unit tests on list stability in <code>AccessRankTests.swift</code> to get an idea on how this value affects predictions.)</p>
 
 <div class="highlight highlight-swift"><pre><span class="k">let</span> <span class="n">accessRank</span> <span class="o">=</span> <span class="n">AccessRank</span><span class="p">(</span><span class="nl">listStability</span><span class="p">:</span> <span class="n">AccessRank</span><span class="p">.</span><span class="n">ListStability</span><span class="p">.</span><span class="n">Medium</span><span class="p">)</span>
@@ -96,7 +96,7 @@
 <h4>
 <a name="removing-items" class="anchor" href="#removing-items"><span class="octicon octicon-link"></span></a>Removing Items</h4>
 
-<p>If your list is dynamic and items might be removed in repsonse to user interaction, you can remove previously added items by calling <code>removeItems</code> and passing the method an array of ids to be removed.</p>
+<p>If your list is dynamic and items might be removed in response to user interaction, you can remove previously added items by calling <code>removeItems</code> and passing the method an array of ids to be removed.</p>
 
 <div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">removeItems</span><span class="p">([</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">])</span>
 </pre></div>
