@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>AccessRank by fe9lix</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="without-description">
+        <h1>AccessRank</h1>
+        <p></p>
+        <p class="view"><a href="https://github.com/fe9lix/AccessRank">View the Project on GitHub <small>fe9lix/AccessRank</small></a></p>
+        <ul>
+          <li><a href="https://github.com/fe9lix/AccessRank/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/fe9lix/AccessRank/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/fe9lix/AccessRank">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="accessrank" class="anchor" href="#accessrank"><span class="octicon octicon-link"></span></a>AccessRank</h1>
+
+<h3>
+<a name="about-accessrank" class="anchor" href="#about-accessrank"><span class="octicon octicon-link"></span></a>About AccessRank</h3>
+
+<p><em>AccessRank</em> is a Swift implementation of the <a href="http://www.cosc.canterbury.ac.nz/andrew.cockburn/papers/AccessRank-camera.pdf">AccessRank algorithm by Fitchett and Cockburn</a> (full reference below) for iOS and Mac OS apps. The algorithm predicts which list items users might select or visit next by taking multiple sources of input into account. For instance, you could use <em>AccessRank</em> to generate a list of predictions for:</p>
+
+<ul>
+<li>which documents a user is most likely to open next.</li>
+<li>which commands in an auto-complete menu might be triggered next.</li>
+<li>which fonts in a font-chooser widget might be selected next.</li>
+<li>basically every part in a user interface where reuse or revisitation of things is involved...</li>
+</ul><p>To improve on other common methods such as recency-based and frequency-based predictions, <em>AccessRank</em> adds Markov weights, time weighting, and other parameters for calculating a final score for each item, while the algorithm tries to maximize both prediction accurracy and list stability. Prediction accurracy is important since top items are easier and faster to access than items in bottom sections; list stability is important since automatic reordering of items can impede usability when users try to reselect an item based on an already learned location. You can configure the algorithm depending on whether you prefer more prediction accuracy or more list stability.</p>
+
+<p>Once <em>AccessRank</em> has calculated predictions, you can use the resulting list to enhance your user interface in various ways. For example, you could display the most likely next items in an additional list as suggestions, or you could visually highlight relevant objects to give users cues where they might want to go next.</p>
+
+<p>Here's the full reference for the <a href="http://www.cosc.canterbury.ac.nz/andrew.cockburn/papers/AccessRank-camera.pdf">paper describing the formulas</a>:</p>
+
+<blockquote>
+<p>Stephen Fitchett and Andy Cockburn. 2012. AccessRank: predicting what users will do next. In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (CHI '12). ACM, New York, NY, USA, 2239-2242.</p>
+</blockquote>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
+
+<p>Just copy the folder <code>src/AccessRank</code> into your project. </p>
+
+<h3>
+<a name="demo-project" class="anchor" href="#demo-project"><span class="octicon octicon-link"></span></a>Demo Project</h3>
+
+<p>The demo project shows a simple usage example: It contains a table view with country names and a text view with predictions. When you select a country name, the item is added to <em>AccessRank</em>, and the list of predictions for which item you might select next is updated.<br><em>Note</em>: The example doesn't use auto-layout due to some obscure bugs in Xcode 6 beta 2...</p>
+
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Due to the Swift language currently lacking access modifiers, basically everything in AccessRank.swift is <em>public</em>. The properties and methods which are supposed to be used by clients are documented here.</p>
+
+<h4>
+<a name="initializing" class="anchor" href="#initializing"><span class="octicon octicon-link"></span></a>Initializing</h4>
+
+<p><em>AccessRank</em> is initialized with an enum value for the list stability that should be used for predictions. The default list stability is <code>.ListStability.Medium</code>. Other possible values are <code>.ListStability.Low</code> and <code>.ListStability.High</code>. <em>Low</em> stability means that prediction accurracy should be maximized while items are allowed to be reordered more than with other values. <em>High</em> stability means that the ordering of items should remain as stable as possible so that users can better learn item locations over time. The appropriate value to use here depends on your application domain. <em>Medium</em> stability is the default value and should be used if you are insecure which one to choose.<br>
+(Also see the three unit tests on list stability in <code>AccessRankTests.swift</code> to get an idea on how this value affects predictions.)</p>
+
+<div class="highlight highlight-swift"><pre><span class="k">let</span> <span class="n">accessRank</span> <span class="o">=</span> <span class="n">AccessRank</span><span class="p">(</span><span class="nl">listStability</span><span class="p">:</span> <span class="n">AccessRank</span><span class="p">.</span><span class="n">ListStability</span><span class="p">.</span><span class="n">Medium</span><span class="p">)</span>
+</pre></div>
+
+<h4>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h4>
+
+<p>The only feature you can currently configure is turning <em>time weighting</em> on and off. The <em>time weighting</em> component of <em>AccessRank</em> takes the time of day and weekday into account. Put simply, items are given more weight when they are revisited in roughly the same time slot as previously. Since the calculation might currently be somewhat inefficient in its current form (although I haven't measured it), you can turn this feature off. You should turn it off if you need to work with large lists <em>and</em> if you are experiencing performance problems, or if you don't need time weighting in your application domain.</p>
+
+<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">useTimeWeighting</span> <span class="o">=</span> <span class="nb">false</span>
+</pre></div>
+
+<h4>
+<a name="adding-items" class="anchor" href="#adding-items"><span class="octicon octicon-link"></span></a>Adding Items</h4>
+
+<p>Adding items is as simple as calling the <code>mostRecentItem</code> property setter with an item id. You should set this property whenever a user selects an item in the list. The setter is implemented as an <code>optional</code> in Swift so that you can set it to <code>nil</code> when the user deselects an item.</p>
+
+<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">mostRecentItem</span> <span class="o">=</span> <span class="s">"A"</span>
+</pre></div>
+
+<h4>
+<a name="removing-items" class="anchor" href="#removing-items"><span class="octicon octicon-link"></span></a>Removing Items</h4>
+
+<p>If your list is dynamic and items might be removed in repsonse to user interaction, you can remove previously added items by calling <code>removeItems</code> and passing the method an array of ids to be removed.</p>
+
+<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">removeItems</span><span class="p">([</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">])</span>
+</pre></div>
+
+<h4>
+<a name="predictions" class="anchor" href="#predictions"><span class="octicon octicon-link"></span></a>Predictions</h4>
+
+<p>The <code>predictions</code> property getter returns the current predictions as an array containing all your item ids (the ones you previously set using <code>mostRecentItem</code>) in sorted order. The first item in the array is the most likely next item. To display the predicated items somewhere in the user interface, these ids can then be matched to the item ids of your own list data structure. </p>
+
+<div class="highlight highlight-swift"><pre><span class="n">println</span><span class="p">(</span><span class="s">"predictions: \(accessRank.predictions)"</span><span class="p">)</span>
+</pre></div>
+
+<h4>
+<a name="delegate-methods" class="anchor" href="#delegate-methods"><span class="octicon octicon-link"></span></a>Delegate Methods</h4>
+
+<p>The delegate method <code>accessRankDidUpdatePredictions(accessRank: AccessRank)</code> is called whenever the predictions are updated. Predictions are updated when you set <code>mostRecentItem</code>, or when you call <code>removeItems</code>.</p>
+
+<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span>
+
+<span class="k">func</span> <span class="n">accessRankDidUpdatePredictions</span><span class="p">(</span><span class="nl">accessRank</span><span class="p">:</span> <span class="n">AccessRank</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">println</span><span class="p">(</span><span class="s">"predictions: \(accessRank.predictions)"</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+<h4>
+<a name="persistence" class="anchor" href="#persistence"><span class="octicon octicon-link"></span></a>Persistence</h4>
+
+<p>If you want to persist the current <em>AccessRank</em> data in your application beyond a single session, you can use the <code>toDictionary</code> method to get a snapshot of the data structure as dictionary for storage. The simplest solution is to store this dictionary in the user defaults (see the example app). You could also convert it to JSON and store it on a server, or in Core Data etc. </p>
+
+<p>Once you have stored the data, you can restore <em>AccessRank</em> by setting the dictionary as second parameter in the initializer:</p>
+
+<div class="highlight highlight-swift"><pre><span class="k">let</span> <span class="n">dataToPersist</span> <span class="o">=</span> <span class="n">accessRank</span><span class="p">.</span><span class="n">toDictionary</span><span class="p">()</span>
+
+<span class="k">let</span> <span class="n">restoredAccessRank</span> <span class="o">=</span> <span class="n">AccessRank</span><span class="p">(</span>
+    <span class="nl">listStability</span><span class="p">:</span> <span class="n">AccessRank</span><span class="p">.</span><span class="n">ListStability</span><span class="p">.</span><span class="n">Medium</span><span class="p">,</span>
+    <span class="nl">data</span><span class="p">:</span> <span class="n">dataToPersist</span><span class="p">)</span>
+</pre></div>
+
+<h3>
+<a name="unit-tests" class="anchor" href="#unit-tests"><span class="octicon octicon-link"></span></a>Unit Tests</h3>
+
+<p>Although there's no exhaustive test coverage, a couple of unit tests in <code>AccessRankTests.swift</code> should at least make sure that the basics work. If you change the implementation of <code>AccessRank.swift</code>, make sure that all tests still pass or, even better, add new tests ;).</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/fe9lix">fe9lix</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
