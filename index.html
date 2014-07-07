@@ -80,7 +80,7 @@
 <h4>
 <a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h4>
 
-<p>The only feature you can currently configure is turning <em>time weighting</em> on and off. The <em>time weighting</em> component of <em>AccessRank</em> takes the time of day and weekday into account. Put simply, items are given more weight when they are revisited in roughly the same time slot as previously. Since the calculation might currently be somewhat inefficient in its current form (although I haven't measured it), you can turn this feature off. You should turn it off if you need to work with large lists <em>and</em> if you are experiencing performance problems, or if you don't need time weighting in your application domain.</p>
+<p>The only feature you can currently configure is turning <em>time weighting</em> on and off. The <em>time weighting</em> component of <em>AccessRank</em> takes the time of day and weekday into account. Put simply, items are given more weight when they are revisited in roughly the same time slot as previously. If you don't need time weighting in your application domain, you should turn this feature off to increase performance.</p>
 
 <div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">useTimeWeighting</span> <span class="o">=</span> <span class="nb">false</span>
 </pre></div>
@@ -104,7 +104,7 @@
 <h4>
 <a name="predictions" class="anchor" href="#predictions"><span class="octicon octicon-link"></span></a>Predictions</h4>
 
-<p>The <code>predictions</code> property getter returns the current predictions as an array containing all your item ids (the ones you previously set using <code>mostRecentItem</code>) in sorted order. The first item in the array is the most likely next item. To display the predicated items somewhere in the user interface, these ids can then be matched to the item ids of your own list data structure. </p>
+<p>The <code>predictions</code> property getter returns the current predictions as an array containing all your item ids (the ones you previously set using <code>mostRecentItem</code>) in sorted order. The first item in the array is the most likely next item. To display the predicted items somewhere in the user interface, these ids can then be matched to the item ids of your own list data structure. </p>
 
 <div class="highlight highlight-swift"><pre><span class="n">println</span><span class="p">(</span><span class="s">"predictions: \(accessRank.predictions)"</span><span class="p">)</span>
 </pre></div>
