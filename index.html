@@ -63,7 +63,8 @@
 <h3>
 <a name="demo-project" class="anchor" href="#demo-project"><span class="octicon octicon-link"></span></a>Demo Project</h3>
 
-<p>The demo project shows a simple usage example: It contains a table view with country names and a text view with predictions. When you select a country name, the item is added to <em>AccessRank</em>, and the list of predictions for which item you might select next is updated.<br><em>Note</em>: The example doesn't use auto-layout due to some obscure bugs in Xcode 6 beta 2...</p>
+<p>The demo project shows a simple usage example: It contains a table view with country names and a text view with predictions. When you select a country name, the item is added to <em>AccessRank</em>, and the list of predictions for which item you might select next is updated. When the app is moved to the background state, an <em>AccessRank</em> snapshot is saved to the user defaults (also see the section on persistence).
+<em>Note</em>: The example doesn't use auto-layout due to some obscure bugs in Xcode 6 beta 2...</p>
 
 <h3>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
@@ -88,11 +89,19 @@
 </pre></div>
 
 <h4>
-<a name="adding-items" class="anchor" href="#adding-items"><span class="octicon octicon-link"></span></a>Adding Items</h4>
+<a name="visiting-items" class="anchor" href="#visiting-items"><span class="octicon octicon-link"></span></a>Visiting Items</h4>
 
-<p>Adding items is as simple as calling the <code>mostRecentItem</code> property setter with an item id. You should set this property whenever a user selects an item in the list. The setter is implemented as an <code>optional</code> in Swift so that you can set it to <code>nil</code> when the user deselects an item.</p>
+<p>Visiting items is as simple as calling the method <code>visitItem</code> with an item id. You should call this method whenever a user selects an item in the list (i.e., visits or uses the item). The parameter is an <code>optional</code> so that you can pass <code>nil</code> when the user deselects an item.</p>
 
-<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">mostRecentItem</span> <span class="o">=</span> <span class="s">"A"</span>
+<div class="highlight highlight-swift"><pre><span class="n">accessRank</span><span class="p">.</span><span class="n">visitItem</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+</pre></div>
+
+<h4>
+<a name="most-recent-item" class="anchor" href="#most-recent-item"><span class="octicon octicon-link"></span></a>Most Recent Item</h4>
+
+<p>Calling the property getter <code>mostRecentItem</code> returns the most recently visited item id as an <code>optional</code>.</p>
+
+<div class="highlight highlight-swift"><pre><span class="n">println</span><span class="p">(</span><span class="s">"mostRecentItem: \(accessRank.mostRecentItem)"</span><span class="p">)</span>
 </pre></div>
 
 <h4>
