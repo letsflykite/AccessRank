@@ -63,13 +63,13 @@
 <h3>
 <a name="demo-project" class="anchor" href="#demo-project"><span class="octicon octicon-link"></span></a>Demo Project</h3>
 
-<p>The demo project shows a simple usage example: It contains a table view with country names and a text view with predictions. When you select a country name, the item is added to <em>AccessRank</em>, and the list of predictions for which item you might select next is updated. When the app is moved to the background state, an <em>AccessRank</em> snapshot is saved to the user defaults (also see the section on persistence).
-<em>Note</em>: The example doesn't use auto-layout due to some obscure bugs in Xcode 6 beta 2...</p>
+<p>The demo project shows a simple usage example: It contains a table view with item names and a text view with predictions. When you select an item, it is added to <em>AccessRank</em>, and the list of predictions for which item you might select next is updated. When the app is moved to the background state, an <em>AccessRank</em> snapshot is saved to the user defaults (also see the section on persistence).
+<em>Note</em>: The example doesn't use auto-layout due to some obscure bugs in Xcode 6 beta 3.</p>
 
 <h3>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>Due to the Swift language currently lacking access modifiers, basically everything in AccessRank.swift is <em>public</em>. The properties and methods which are supposed to be used by clients are documented here.</p>
+<p>Due to the Swift language currently lacking access modifiers, basically everything in AccessRank.swift is <em>public</em> (This will be changed as soon as Swift includes access modifiers in a later release.). The properties and methods which are supposed to be used by clients are documented here.</p>
 
 <h4>
 <a name="initializing" class="anchor" href="#initializing"><span class="octicon octicon-link"></span></a>Initializing</h4>
